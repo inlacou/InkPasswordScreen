@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 			}
 		}
 		binding.fab2.setOnClickListener { view ->
-			InkPasswordPasswordDialog.showAsDialog(this, "test".toMD5(), "no hint", 3) {
+			InkPasswordPasswordDialog.launch(this, "test".toMD5(), "no hint", 3) {
 				Snackbar.make(view, "Result is ${it.name}", Snackbar.LENGTH_SHORT).show()
 			}
 		}

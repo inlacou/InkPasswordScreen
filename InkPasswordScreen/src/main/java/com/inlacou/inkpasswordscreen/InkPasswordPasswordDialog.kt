@@ -67,7 +67,7 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 	fun removeAsDialog(act: Activity) = (act.window.decorView as ViewGroup).removeView(this)
 
 	private fun inAnimation(onStart: (() -> Unit)? = null, onEnd: (() -> Unit)? = null) {
-		AnimationUtils.loadAnimation(context, android.R.anim.fade_in).let {
+		AnimationUtils.loadAnimation(context, android.R.anim.fade_in).let { animation ->
 			startAnimation(animation)
 			animation.setAnimationListener(object : Animation.AnimationListener {
 				override fun onAnimationStart(animation: Animation) { onStart?.invoke() }
@@ -77,7 +77,7 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 		}
 	}
 	private fun outAnimation(onStart: (() -> Unit)? = null, onEnd: (() -> Unit)? = null) {
-		AnimationUtils.loadAnimation(context, android.R.anim.fade_out).let {
+		AnimationUtils.loadAnimation(context, android.R.anim.fade_out).let { animation ->
 			startAnimation(animation)
 			animation.setAnimationListener(object : Animation.AnimationListener {
 				override fun onAnimationStart(animation: Animation) { onStart?.invoke() }
@@ -92,7 +92,7 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 	}
 
 	companion object {
-		fun showAsDialog(
+		fun launch(
 			act: Activity,
 			md5: String,
 			hint: String? = null,
