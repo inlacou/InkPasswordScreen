@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ink_password_activity_background">#FFF</color>
+
+    <color name="ink_password_dialog_background">#FFF</color>
+    <color name="ink_password_dialog_overlay_background">#2444</color>
+
+    <color name="ink_password_input_background">#DDD</color>
+    <color name="ink_password_input_text_color">#FFF</color>
+
+    <color name="ink_password_attempts_background">#FFF</color>
+    <color name="ink_password_attempts_text_color">#FFF</color>
+
+    <color name="ink_password_hint_background">#FFF</color>
+    <color name="ink_password_hint_text_color">#AAA</color>
+
+    <color name="ink_password_button_background">#EEE</color>
+    <color name="ink_password_button_background_ripple">#AAA</color>
+    <color name="ink_password_button_text_color">#000</color>
+
+</resources>

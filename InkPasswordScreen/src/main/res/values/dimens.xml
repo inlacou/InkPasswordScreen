@@ -1,0 +1,17 @@
+<resources>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="ink_password_input_min_width">100dp</dimen>
+    <dimen name="ink_password_input_text_size">30sp</dimen>
+    <dimen name="ink_password_hint_text_size">16sp</dimen>
+    <dimen name="ink_password_attempts_start_margin">12dp</dimen>
+    <dimen name="ink_password_input_margin">8dp</dimen>
+    <dimen name="ink_password_hint_top_margin">16dp</dimen>
+    <dimen name="ink_password_button_text_size">20sp</dimen>
+    <dimen name="ink_password_dialog_width">350dp</dimen>
+    <dimen name="ink_password_dialog_height">300dp</dimen>
+    <dimen name="ink_password_dialog_background_corners">16dp</dimen>
+    <dimen name="ink_password_button_top_margin">16dp</dimen>
+    <dimen name="ink_password_button_padding_vertical">8dp</dimen>
+    <dimen name="ink_password_button_padding_horizontal">16dp</dimen>
+    <dimen name="ink_password_button_corners">16dp</dimen>
+</resources>
