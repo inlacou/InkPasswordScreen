@@ -37,10 +37,14 @@ interface BaseInkPasswordView {
 			maxAttempts.let {
 				if(it!=null) {
 					if(it<attempts) {
-						end(InkPasswordAttemptStatus.DENIED_TOO_MANY_ATTEMPTS)
 						tvHint?.visibility = View.VISIBLE
+						end(InkPasswordAttemptStatus.DENIED_TOO_MANY_ATTEMPTS)
+						return
 					}
-				} else end(InkPasswordAttemptStatus.DENIED)
+				} else {
+					end(InkPasswordAttemptStatus.DENIED)
+					return
+				}
 			}
 			tvAttempts?.text = "$attempts/$maxAttempts"
 		}
