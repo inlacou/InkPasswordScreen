@@ -3,6 +3,7 @@ package com.inlacou.inkpasswordscreen
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
@@ -21,6 +22,7 @@ class InkPasswordPasswordActivity : Activity(), BaseInkPasswordView {
 	override val btnCheck: RippleButton? get() = binder?.include?.btnCheck
 
 	override lateinit var md5: String
+	private var log: Boolean = false
 	override var hint: String? = null
 	override var maxAttempts: Int? = null
 	override var attempts: Int = 0
@@ -40,12 +42,14 @@ class InkPasswordPasswordActivity : Activity(), BaseInkPasswordView {
 			md5: String,
 			hint: String? = null,
 			maxAttempts: Int? = null,
+			log: Boolean = false,
 			listener: (status: InkPasswordAttemptStatus) -> Unit
 		) {
 			val intent = Intent(activity, InkPasswordPasswordActivity::class.java)
 			intent.putExtra("md5", md5)
 			intent.putExtra("maxAttempts", maxAttempts)
 			intent.putExtra("hint", hint)
+			intent.putExtra("log", log)
 			activity.startActivity(intent)
 			activity.overridePendingTransition(0, 0)
 			sListener = listener
@@ -58,6 +62,7 @@ class InkPasswordPasswordActivity : Activity(), BaseInkPasswordView {
 		binder = ActivityInkPasswordBinding.inflate(layoutInflater)
 		setContentView(binder?.root)
 
+		log = intent.getBooleanExtra("log", false)
 		md5 = intent.getStringExtra("md5")!!
 		maxAttempts = intent.getIntExtra("maxAttempts", Int.MIN_VALUE)
 
@@ -71,7 +76,9 @@ class InkPasswordPasswordActivity : Activity(), BaseInkPasswordView {
 	override fun end(result: InkPasswordAttemptStatus) {
 		sListener?.invoke(result)
 		sListener = null
+		if(log) Log.d("InkPasswordAct", "finish")
 		finish()
+		if(log) Log.d("InkPasswordAct", "overridePendingTransition")
 		overridePendingTransition(0, 0)
 	}
 }

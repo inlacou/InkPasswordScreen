@@ -3,6 +3,7 @@ package com.inlacou.inkpasswordscreen
 import android.app.Activity
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,7 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 	private val background: View? get() = binder?.background
 
 	override lateinit var md5: String
+	private var log: Boolean = false
 	override var hint: String? = null
 	override var maxAttempts: Int? = null
 	override var attempts: Int = 0
@@ -38,12 +40,14 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 		md5: String,
 		hint: String? = null,
 		maxAttempts: Int? = null,
+		log: Boolean = false,
 		cancelOnOutsideTouch: Boolean,
 		onCancelled: (InkPasswordPasswordDialog) -> Unit,
 		onDeleteAnimationFinished: (dialog: InkPasswordPasswordDialog, status: InkPasswordAttemptStatus) -> Unit,
 	): this(context) {
 		this.md5 = md5
 		this.hint = hint
+		this.log = log
 		this.maxAttempts = maxAttempts
 		this.cancelOnOutsideTouch = cancelOnOutsideTouch
 		this.onCancelled = onCancelled
@@ -88,7 +92,9 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 	}
 
 	override fun end(result: InkPasswordAttemptStatus) {
-		outAnimation(onEnd = { onDeleteAnimationFinished.invoke(this, result) })
+		outAnimation(onEnd = {
+			if(log) Log.d("InkPasswordScreen", "onEnd")
+			onDeleteAnimationFinished.invoke(this, result) })
 	}
 
 	companion object {
@@ -97,16 +103,20 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 			md5: String,
 			hint: String? = null,
 			maxAttempts: Int? = null,
+			log: Boolean = false,
 			listener: (status: InkPasswordAttemptStatus) -> Unit
 		) {
 			InkPasswordPasswordDialog(act,
 				cancelOnOutsideTouch = true,
 				md5 = md5,
 				hint = hint,
+				log = log,
 				maxAttempts = maxAttempts,
 				onCancelled = { it.outAnimation(onEnd = { it.removeAsDialog(act) }) },
 				onDeleteAnimationFinished = { dialog: InkPasswordPasswordDialog, status: InkPasswordAttemptStatus ->
+					if(log) Log.d("InkPasswordDialog", "removeView")
 					(act.window.decorView as ViewGroup).removeView(dialog)
+					if(log) Log.d("InkPasswordDialog", "invoke")
 					listener.invoke(status)
 				}).showAsDialog(act)
 		}
