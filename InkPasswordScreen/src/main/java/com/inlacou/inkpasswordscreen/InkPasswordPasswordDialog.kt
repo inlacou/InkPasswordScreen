@@ -28,6 +28,7 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 
 	override lateinit var md5: String
 	private var log: Boolean = false
+	private var delayRemoveDialog: Long? = 100
 	override var hint: String? = null
 	override var maxAttempts: Int? = null
 	override var attempts: Int = 0
@@ -40,6 +41,7 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 		hint: String? = null,
 		maxAttempts: Int? = null,
 		log: Boolean = false,
+		delayRemoveDialog: Long? = 100,
 		cancelOnOutsideTouch: Boolean,
 		onDeleteAnimationFinished: (dialog: InkPasswordPasswordDialog, status: InkPasswordAttemptStatus) -> Unit,
 	): this(context) {
@@ -47,6 +49,7 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 		this.hint = hint
 		this.log = log
 		this.maxAttempts = maxAttempts
+		this.delayRemoveDialog = delayRemoveDialog
 		this.cancelOnOutsideTouch = cancelOnOutsideTouch
 		this.onDeleteAnimationFinished = onDeleteAnimationFinished
 	}
@@ -91,11 +94,7 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 	}
 
 	override fun end(result: InkPasswordAttemptStatus) {
-		outAnimation(
-			onEnd = {
-			if(log) Log.d("InkPasswordScreen", "onEnd")
-			onDeleteAnimationFinished.invoke(this, result) }
-		)
+		outAnimation(onEnd = { onDeleteAnimationFinished.invoke(this, result) })
 	}
 
 	companion object {
@@ -104,6 +103,7 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 			md5: String,
 			hint: String? = null,
 			maxAttempts: Int? = null,
+			delayRemoveDialog: Long? = 100,
 			log: Boolean = false,
 			/**
 			 * Should call removeAsDialog on the dialog, but who am I to command you
@@ -116,11 +116,20 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 				hint = hint,
 				log = log,
 				maxAttempts = maxAttempts,
+				delayRemoveDialog = delayRemoveDialog,
 				onDeleteAnimationFinished = { dialog: InkPasswordPasswordDialog, status: InkPasswordAttemptStatus ->
-					//if(log) Log.d("InkPasswordDialog", "removeView")
-					//dialog.removeAsDialog(act)
-					if(log) Log.d("InkPasswordDialog", "invoke")
-					listener.invoke(status)
+					if(delayRemoveDialog!=null && delayRemoveDialog>0) {
+						Thread {
+							Thread.sleep(delayRemoveDialog)
+							act.runOnUiThread {
+								dialog.removeAsDialog(act)
+								listener.invoke(status)
+							}
+						}.start()
+					}else{
+						dialog.removeAsDialog(act)
+						listener.invoke(status)
+					}
 				}).showAsDialog(act)
 		}
 	}
