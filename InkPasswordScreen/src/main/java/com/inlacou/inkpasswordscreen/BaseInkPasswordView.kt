@@ -23,7 +23,6 @@ interface BaseInkPasswordView {
 		if((maxAttempts?:0) <= 0) {
 			maxAttempts = null
 		}
-
 		tvHint?.text = hint
 		tvHint?.visibility = View.INVISIBLE
 		btnCheck?.setOnClickListener { check(etInput?.text?.toString() ?: "") }

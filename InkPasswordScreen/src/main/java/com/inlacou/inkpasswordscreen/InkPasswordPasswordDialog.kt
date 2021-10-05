@@ -33,7 +33,6 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 	override var attempts: Int = 0
 
 	private lateinit var onDeleteAnimationFinished: (dialog: InkPasswordPasswordDialog, status: InkPasswordAttemptStatus) -> Unit
-	private lateinit var onCancelled: (InkPasswordPasswordDialog) -> Unit
 	private var cancelOnOutsideTouch: Boolean = true
 
 	constructor(context: Context,
@@ -42,7 +41,6 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 		maxAttempts: Int? = null,
 		log: Boolean = false,
 		cancelOnOutsideTouch: Boolean,
-		onCancelled: (InkPasswordPasswordDialog) -> Unit,
 		onDeleteAnimationFinished: (dialog: InkPasswordPasswordDialog, status: InkPasswordAttemptStatus) -> Unit,
 	): this(context) {
 		this.md5 = md5
@@ -50,14 +48,15 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 		this.log = log
 		this.maxAttempts = maxAttempts
 		this.cancelOnOutsideTouch = cancelOnOutsideTouch
-		this.onCancelled = onCancelled
 		this.onDeleteAnimationFinished = onDeleteAnimationFinished
 	}
 
 	init {
 		this.initialize()
 		populate()
-		background?.setOnClickListener { if(cancelOnOutsideTouch) outAnimation(onEnd = { onDeleteAnimationFinished.invoke(this, InkPasswordAttemptStatus.CANCELLED) }) }
+		background?.setOnClickListener {
+			if(cancelOnOutsideTouch) outAnimation(onEnd = { onDeleteAnimationFinished.invoke(this, InkPasswordAttemptStatus.CANCELLED) })
+		}
 	}
 
 	private fun initialize() {
@@ -92,9 +91,11 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 	}
 
 	override fun end(result: InkPasswordAttemptStatus) {
-		outAnimation(onEnd = {
+		outAnimation(
+			onEnd = {
 			if(log) Log.d("InkPasswordScreen", "onEnd")
-			onDeleteAnimationFinished.invoke(this, result) })
+			onDeleteAnimationFinished.invoke(this, result) }
+		)
 	}
 
 	companion object {
@@ -104,6 +105,9 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 			hint: String? = null,
 			maxAttempts: Int? = null,
 			log: Boolean = false,
+			/**
+			 * Should call removeAsDialog on the dialog, but who am I to command you
+			 */
 			listener: (status: InkPasswordAttemptStatus) -> Unit
 		) {
 			InkPasswordPasswordDialog(act,
@@ -112,10 +116,9 @@ class InkPasswordPasswordDialog @JvmOverloads constructor(context: Context, attr
 				hint = hint,
 				log = log,
 				maxAttempts = maxAttempts,
-				onCancelled = { it.outAnimation(onEnd = { it.removeAsDialog(act) }) },
 				onDeleteAnimationFinished = { dialog: InkPasswordPasswordDialog, status: InkPasswordAttemptStatus ->
-					if(log) Log.d("InkPasswordDialog", "removeView")
-					(act.window.decorView as ViewGroup).removeView(dialog)
+					//if(log) Log.d("InkPasswordDialog", "removeView")
+					//dialog.removeAsDialog(act)
 					if(log) Log.d("InkPasswordDialog", "invoke")
 					listener.invoke(status)
 				}).showAsDialog(act)
